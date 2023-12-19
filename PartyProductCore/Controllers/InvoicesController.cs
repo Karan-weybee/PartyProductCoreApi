@@ -59,34 +59,34 @@ namespace PartyProductCore.Controllers
 
             // return Ok(partyId + ":-" + productName + ":-" + dateTime);
             string formattedDateTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss"); ;
-            List<Invoices> invoices = new List<Invoices>();
+            List<Invoice> invoices = new List<Invoice>();
             formattedDateTime = formattedDateTime == "0001-01-01 00:00:00" ? "" : formattedDateTime;
             productName = productName == null ? "" : productName;
 
 
-            invoices = await _context.Invoices.FromSqlRaw(
+            invoices = await _context.Invoice.FromSqlRaw(
         "EXEC GetInvoiceFromProductNameAndDate @partyId, @productName, @DateOfInvoice",
         new SqlParameter("@partyId", partyId),
         new SqlParameter("@productName", productName),
         new SqlParameter("@DateOfInvoice", formattedDateTime)
     ).ToListAsync();
 
-            List<Invoice> invoice = new List<Invoice>();
-            foreach (var item in invoices)
-            {
-                invoice.Add(new Invoice()
-                {
-                    Id = item.Id,
-                    Quantity = item.Quantity,
-                    RateOfProduct = item.RateOfProduct,
-                    PartyName = _context.Parties.Find(item.PartyId).PartyName.ToString(),
-                    ProductName = _context.Products.Find(item.ProductId).ProductName.ToString(),
-                    DateOfInvoice = item.DateOfInvoice,
-                    Total = item.Quantity * item.RateOfProduct
-                });
-            }
+            //List<Invoice> invoice = new List<Invoice>();
+            //foreach (var item in invoices)
+            //{
+            //    invoice.Add(new Invoice()
+            //    {
+            //        Id = item.Id,
+            //        Quantity = item.Quantity,
+            //        RateOfProduct = item.RateOfProduct,
+            //        PartyName = _context.Parties.Find(item.PartyId).PartyName.ToString(),
+            //        ProductName = _context.Products.Find(item.ProductId).ProductName.ToString(),
+            //        DateOfInvoice = item.DateOfInvoice,
+            //        Total = item.Quantity * item.RateOfProduct
+            //    });
+            //}
 
-            return Ok(invoice);
+            return Ok(invoices);
 
         }
 

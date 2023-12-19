@@ -20,6 +20,7 @@ namespace PartyProductCore.Models
         public virtual DbSet<Parties> Parties { get; set; }
         public virtual DbSet<ProductRates> ProductRates { get; set; }
         public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<Entities.Invoice> Invoice { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
