@@ -63,7 +63,6 @@ namespace PartyProductCore.Controllers
             formattedDateTime = formattedDateTime == "0001-01-01 00:00:00" ? "" : formattedDateTime;
             productName = productName == null ? "" : productName;
 
-
             invoices = await _context.Invoice.FromSqlRaw(
         "EXEC GetInvoiceFromProductNameAndDate @partyId, @productName, @DateOfInvoice",
         new SqlParameter("@partyId", partyId),
@@ -71,20 +70,6 @@ namespace PartyProductCore.Controllers
         new SqlParameter("@DateOfInvoice", formattedDateTime)
     ).ToListAsync();
 
-            //List<Invoice> invoice = new List<Invoice>();
-            //foreach (var item in invoices)
-            //{
-            //    invoice.Add(new Invoice()
-            //    {
-            //        Id = item.Id,
-            //        Quantity = item.Quantity,
-            //        RateOfProduct = item.RateOfProduct,
-            //        PartyName = _context.Parties.Find(item.PartyId).PartyName.ToString(),
-            //        ProductName = _context.Products.Find(item.ProductId).ProductName.ToString(),
-            //        DateOfInvoice = item.DateOfInvoice,
-            //        Total = item.Quantity * item.RateOfProduct
-            //    });
-            //}
 
             return Ok(invoices);
 
