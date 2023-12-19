@@ -52,76 +52,24 @@ namespace PartyProductCore.Controllers
             return invoice;
         }
 
-        // GET: api/Invoices/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Invoice>> GetInvoices(int id)
-        //{
-
-        //    if (!InvoicesExists(id))
-        //    {
-        //        return NotFound("Invoice Not Found");
-        //    }
-        //    var invoices = await _context.Invoices.FromSqlRaw($"GetInvoice {id}").ToListAsync();
-
-        //    Invoice invoice = new Invoice()
-        //    {
-        //        Id = id,
-        //        RateOfProduct = invoices.First().RateOfProduct,
-        //        Quantity = invoices.First().Quantity,
-        //        PartyName = _context.Parties.Find(invoices.First().PartyId).PartyName.ToString(),
-        //        ProductName = _context.Products.Find(invoices.First().ProductId).ProductName.ToString(),
-        //        DateOfInvoice = invoices.First().DateOfInvoice,
-        //        Total = invoices.First().Quantity * invoices.First().RateOfProduct
-        //    };
-        //    return invoice;
-        //}
-
 
         [HttpGet("Search")]
         public async Task<ActionResult<List<Invoice>>> GetInvoices([FromQuery] int partyId, string productName, DateTime dateTime)
         {
 
+            // return Ok(partyId + ":-" + productName + ":-" + dateTime);
+            string formattedDateTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss"); ;
             List<Invoices> invoices = new List<Invoices>();
+            formattedDateTime = formattedDateTime == "0001-01-01 00:00:00" ? "" : formattedDateTime;
+            productName = productName == null ? "" : productName;
 
-            if (productName != null && dateTime.ToString() != "1/1/0001 12:00:00 AM")
-            {
-                string formattedDateTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-                invoices = await _context.Invoices.FromSqlRaw(
-            "EXEC GetInvoiceFromProductNameAndDate @partyId, @productName, @DateOfInvoice",
-            new SqlParameter("@partyId", partyId),
-            new SqlParameter("@productName", productName),
-            new SqlParameter("@DateOfInvoice", SqlDbType.DateTime) { Value = formattedDateTime }
-        ).ToListAsync();
-            }
-
-            else if (productName != null && dateTime.ToString() == "1/1/0001 12:00:00 AM")
-            {
-
-                invoices = await _context.Invoices.FromSqlRaw(
-           "EXEC GetInvoiceFromProductName @partyId, @productName",
-           new SqlParameter("@partyId", partyId),
-           new SqlParameter("@productName", productName)).ToListAsync();
-            }
-
-            else if (productName == null && dateTime.ToString() != "1/1/0001 12:00:00 AM")
-            {
-                string formattedDateTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
-
-                invoices = await _context.Invoices.FromSqlRaw(
-           "EXEC GetInvoiceFromDate @partyId, @DateOfInvoice",
-           new SqlParameter("@partyId", partyId),
-           new SqlParameter("@DateOfInvoice", SqlDbType.DateTime) { Value = formattedDateTime }).ToListAsync();
-            }
-
-            else if (productName == null && dateTime.ToString() == "1/1/0001 12:00:00 AM")
-            {
-
-                invoices = await _context.Invoices.FromSqlRaw(
-           "EXEC GetInvoiceFromPartyId @partyId",
-           new SqlParameter("@partyId", partyId)
-      ).ToListAsync();
-            }
+            invoices = await _context.Invoices.FromSqlRaw(
+        "EXEC GetInvoiceFromProductNameAndDate @partyId, @productName, @DateOfInvoice",
+        new SqlParameter("@partyId", partyId),
+        new SqlParameter("@productName", productName),
+        new SqlParameter("@DateOfInvoice", formattedDateTime)
+    ).ToListAsync();
 
             List<Invoice> invoice = new List<Invoice>();
             foreach (var item in invoices)

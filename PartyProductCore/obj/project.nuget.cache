@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PufCNTRcxi/cU6bxfYxL7F/StK/8WsBjId3JFKU6wiErzNpsWUnpZmzEQ/vNgphaNyiQnRf3ogDB9S/phySznw==",
+  "dgSpecHash": "4TCo+1Z+nquXMr7SrQMUPYDSLUp0rPQQu3txJKPi3OsmZO9Tq7pu6jASfpDnBPMtEgMQB5kEXFVWZTvMCXxbKA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\DELL\\source\\repos\\PartyProductCore\\PartyProductCore\\PartyProductCore.csproj",
+  "projectFilePath": "C:\\Users\\DELL\\source\\repos\\PartyProductCore\\PartyProductCoreApi\\PartyProductCore\\PartyProductCore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\DELL\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
