@@ -33,23 +33,9 @@ namespace PartyProductCore.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
         {
-            var invoices = await _context.Invoices.FromSqlRaw("GetAllInvoices").ToListAsync();
-            List<Invoice> invoice = new List<Invoice>();
-            foreach (var item in invoices)
-            {
-                invoice.Add(new Invoice()
-                {
-                    Id = item.Id,
-                    Quantity = item.Quantity,
-                    RateOfProduct = item.RateOfProduct,
-                    PartyName = _context.Parties.Find(item.PartyId).PartyName.ToString(),
-                    ProductName = _context.Products.Find(item.ProductId).ProductName.ToString(),
-                    DateOfInvoice = item.DateOfInvoice,
-                    Total = item.Quantity * item.RateOfProduct
-                });
-            }
+            var invoices = await _context.Invoice.FromSqlRaw("GetAllInvoices").ToListAsync();
 
-            return invoice;
+            return invoices;
         }
 
 
