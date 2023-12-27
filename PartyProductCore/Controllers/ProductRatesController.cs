@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace PartyProductCore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowSpecificOrigin")]
     public class ProductRatesController : ControllerBase
     {
         private readonly PartyProductCoreContext _context;
@@ -99,10 +101,6 @@ namespace PartyProductCore.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductRateDTO>> PostProductRates(ProductRateDTO productRateDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             try
             {

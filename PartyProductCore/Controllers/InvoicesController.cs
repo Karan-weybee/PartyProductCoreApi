@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -16,6 +17,7 @@ namespace PartyProductCore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowSpecificOrigin")]
     public class InvoicesController : ControllerBase
     {
         private readonly PartyProductCoreContext _context;
@@ -44,7 +46,7 @@ namespace PartyProductCore.Controllers
         {
 
             // return Ok(partyId + ":-" + productName + ":-" + dateTime);
-            string formattedDateTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss"); ;
+            string formattedDateTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
             List<Invoice> invoices = new List<Invoice>();
             formattedDateTime = formattedDateTime == "0001-01-01 00:00:00" ? "" : formattedDateTime;
             productName = productName == null ? "" : productName;
@@ -85,6 +87,29 @@ namespace PartyProductCore.Controllers
             return StatusCode(201, $"invoice Created Successfully");
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<InvoiceDTO>> PutInvoices(int id, InvoiceDTO invoicesDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync("EXEC UpdateInvoice @id,@Rate_Of_Product, @Quantity, @Party_id, @Product_id,@Date",
+                     new SqlParameter("@id", id),
+                     new SqlParameter("@Rate_Of_Product", invoicesDTO.RateOfProduct),
+                     new SqlParameter("@Quantity", invoicesDTO.Quantity),
+                     new SqlParameter("@Party_id", invoicesDTO.PartyId),
+                     new SqlParameter("@Product_id", invoicesDTO.ProductId),
+                     new SqlParameter("@Date", DateTime.Today.Date));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return StatusCode(201, $"invoice updated Successfully");
+        }
         // DELETE: api/Invoices
         [HttpDelete]
         public async Task<ActionResult<Invoices>> DeleteInvoices()
@@ -93,8 +118,6 @@ namespace PartyProductCore.Controllers
 
             return StatusCode(202, $"invoice Deleted Successfully");
         }
-
-
 
         private bool InvoicesExists(int id)
         {

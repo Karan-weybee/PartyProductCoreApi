@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace PartyProductCore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowSpecificOrigin")]
     public class AssignPartiesController : ControllerBase
     {
         private readonly PartyProductCoreContext _context;
@@ -97,10 +99,10 @@ namespace PartyProductCore.Controllers
         [HttpPost]
         public async Task<ActionResult<AssignPartyDTO>> PostAssignParties(AssignPartyDTO assignPartyDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
             if (AssignExists(assignPartyDTO.PartyId, assignPartyDTO.ProductId))
             {
                 return BadRequest("Party Is already Assign with same Product");
